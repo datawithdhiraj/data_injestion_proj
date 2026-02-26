@@ -19,13 +19,14 @@ class Bronze():
         import datetime
         from pyspark.sql.functions import lit
         date = datetime.date.today().strftime("%Y-%m-%d")
-        dateFolder = datetime.date.today().strftime("%Y/%m/%d/")
+        dateFolder = datetime.date.today().strftime("%d/%m/%Y/")
         file_name =  file_ini + date + ".txt"
         file_path = self.landing_zone + dateFolder
         return (file_name,file_path)
 
     def consume_customers(self):
         (file_name,file_path) = self.get_file_Name_path(self.customers_file_ini)
+        print(file_path + file_name)
         file_exists = any(f.name == file_name for f in dbutils.fs.ls(file_path))
         if file_exists:
             schema = '''customer_id long,
@@ -113,3 +114,21 @@ class Bronze():
         self.assert_count("products", 5 if sets == 1 else 10)
         self.assert_count("sales", 5 if sets == 1 else 10)
         print(f"Bronze layer validation completed in {int(time.time()) - start} seconds")                
+
+# COMMAND ----------
+
+br =Bronze('dev')
+br.consume_customers()
+
+
+# COMMAND ----------
+
+file_path = 'abfss://raw@storageaccdb.dfs.core.windows.net/AmazonRetailRaw/2026/02/26/'
+file_name = 'abfss://raw@storageaccdb.dfs.core.windows.net/AmazonRetailRaw/2026/02/26/Customers_2026-02-26.txt'
+file_exists = any(f.name == file_name for f in dbutils.fs.ls(file_path))
+print( dbutils.fs.ls(file_path))
+print(file_exists)
+
+# COMMAND ----------
+
+
