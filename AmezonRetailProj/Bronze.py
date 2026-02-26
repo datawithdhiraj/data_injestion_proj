@@ -5,11 +5,6 @@
 
 # COMMAND ----------
 
-
-
-
-# COMMAND ----------
-
 class Bronze():
     def __init__(self, env):        
         self.Conf = Config()

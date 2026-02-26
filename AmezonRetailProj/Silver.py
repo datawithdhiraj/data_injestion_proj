@@ -1,11 +1,6 @@
 # Databricks notebook source
-# MAGIC %run ./Config
-
-# COMMAND ----------
-
 class Silver():
     def __init__(self, env):        
-        self.Conf = Config()
         self.catalog = env
         self.silver_db = "silver_db"
         self.bronze_db = "bronze_db"
