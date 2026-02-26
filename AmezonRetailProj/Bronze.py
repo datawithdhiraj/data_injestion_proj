@@ -6,15 +6,14 @@
 # COMMAND ----------
 
 
-import datetime
-from pyspark.sql.functions import lit
+
 
 # COMMAND ----------
 
 class Bronze():
     def __init__(self, env):        
         self.Conf = Config()
-        self.landing_zone = self.Conf.base_dir_data + "/AmezonRetailRaw/" 
+        self.landing_zone = self.Conf.base_dir_data + "AmazonRetailRaw/" 
         self.catalog = env
         self.bronze_db = "bronze_db"
         self.customers_file_ini = "Customers_"
@@ -22,8 +21,10 @@ class Bronze():
         self.product_file_ini = "Products_"
 
     def get_file_Name_path(self,file_ini):
+        import datetime
+        from pyspark.sql.functions import lit
         date = datetime.date.today().strftime("%Y-%m-%d")
-        dateFolder = datetime.date.today().strftime("/%Y/%m/%d/")
+        dateFolder = datetime.date.today().strftime("%Y/%m/%d/")
         file_name =  file_ini + date + ".txt"
         file_path = self.landing_zone + dateFolder  + file_name
         return (file_name,file_path)

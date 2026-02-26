@@ -8,7 +8,6 @@ class SetupHelper():
         
 
     def create_db(self):
-        spark.catalog.clearCache()
         print(f"Creating the databases in {self.catalog} env", end='')
         self.create_bronze_layer()
         self.create_silver_layer()
@@ -30,22 +29,22 @@ class SetupHelper():
     def create_gold_layer(self):
         spark.sql(f"CREATE DATABASE IF NOT EXISTS {self.catalog}.{self.gold_db}")
         self.create_sales_summary_daily(self.gold_db)
-        self.create_sales_summary_product(self.gold_db)
+        self.create_sales_summary_catagory(self.gold_db)
 
     def create_sales_summary_daily(self, db_name):
         print(f"Creating daily sales summary table...", end='')
         spark.sql(f"""CREATE TABLE IF NOT EXISTS {self.catalog}.{db_name}.sales_summmary_daily(
-            'date' date, 
+            date date, 
             total_sales double                  
                 )
-                """) 
+                """)
         print("Done")
 
     def create_sales_summary_catagory(self, db_name):
-        print(f"Creating product wise sales summary table...", end='')
-        spark.sql(f"""CREATE TABLE IF NOT EXISTS {self.catalog}.{db_name}.sales_summmary_daily(
+        print(f"Creating category wise sales summary table...", end='')
+        spark.sql(f"""CREATE TABLE IF NOT EXISTS {self.catalog}.{db_name}.sales_summary_catagory(
             category string,
-            total_sales double,                  
+            total_sales double                 
                 )
                 """) 
         print("Done")
@@ -102,14 +101,14 @@ class SetupHelper():
         assert spark.sql(f"SHOW TABLES IN {self.catalog}.{db_name}") \
                    .filter(f"isTemporary == false and tableName == '{table_name}'") \
                    .count() == 1, f"The table {table_name} is missing"
-        print(f"Found {table_name} table in {self.catalog}.{self.db_name}: Success")
+        print(f"Found {table_name} table in {self.catalog}.{db_name}: Success")
         
     def validate(self):
         import time
         start = int(time.time())
         print(f"\nStarting setup validation ...")
         assert spark.sql(f"SHOW DATABASES IN {self.catalog}") \
-                    .filter(f"databaseName in ({self.bronze_db,self.silver_db,self.gold_db})") \
+                    .filter(f"databaseName in ('{self.bronze_db}','{self.silver_db}','{self.gold_db}')") \
                     .count() == 3, f"The database is missing"
         print(f"Found databases : Success")
         self.assert_table(self.bronze_db,"customers")   
@@ -119,7 +118,7 @@ class SetupHelper():
         self.assert_table(self.silver_db,"products")
         self.assert_table(self.silver_db,"sales")
         self.assert_table(self.gold_db,"sales_summmary_daily")
-        self.assert_table(self.gold_db,"create_sales_summary_catagory")
+        self.assert_table(self.gold_db,"sales_summary_catagory")
         print(f"Setup validation completed in {int(time.time()) - start} seconds")
         
     def cleanup(self): 
