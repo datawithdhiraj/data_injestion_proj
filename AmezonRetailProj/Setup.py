@@ -34,7 +34,7 @@ class SetupHelper():
     def create_sales_summary_daily(self, db_name):
         print(f"Creating daily sales summary table...", end='')
         spark.sql(f"""CREATE TABLE IF NOT EXISTS {self.catalog}.{db_name}.sales_summmary_daily(
-            date date, 
+            sale_date date, 
             total_sales double                  
                 )
                 """)
@@ -123,7 +123,7 @@ class SetupHelper():
         
     def cleanup(self): 
         if spark.sql(f"SHOW DATABASES IN {self.catalog}") \
-                    .filter(f"databaseName in ({self.bronze_db,self.silver_db,self.gold_db})") \
+                    .filter(f"databaseName in ('{self.bronze_db}','{self.silver_db}','{self.gold_db}')") \
                     .count() == 3:
             print(f"Dropping the database in catalog {self.catalog} ...", end='')
             spark.sql(f"DROP DATABASE {self.catalog}.{self.bronze_db} CASCADE")

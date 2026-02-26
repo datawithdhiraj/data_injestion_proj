@@ -13,7 +13,7 @@ SH = SetupHelper(env)
 
 # COMMAND ----------
 
-setup_required = spark.sql(f"SHOW DATABASES IN {SH.catalog}").filter(f"databaseName in ('{SH.bronze_db}','{SH.silver_db}','{SH.gold_db}')").count() != 4
+setup_required = spark.sql(f"SHOW DATABASES IN {SH.catalog}").filter(f"databaseName in ('{SH.bronze_db}','{SH.silver_db}','{SH.gold_db}')").count() != 3
 if setup_required:
     SH.setup()
     SH.validate()

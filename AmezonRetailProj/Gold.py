@@ -21,13 +21,12 @@ class Gold():
 
         products_df = self.get_df(self.products_tb)
         sales_df = self.get_df(self.sales_tb)
-        
+
         sales_summmary_daily = ( sales_df.join(products_df, "product_id")
                     .withColumn("sales_amount", F.col("quantity") * F.col("price"))
                     .groupBy("sale_date")
                     .agg(F.sum("sales_amount").alias("total_sales")))
-
-        sales_summmary_daily.write.mode('append').saveAsTable(f'{self.catalog}.{self.silver_db}.{self.sales_summary_daily_tb}')
+        sales_summmary_daily.write.mode('append').saveAsTable(f'{self.catalog}.{self.gold_db}.{self.sales_summary_daily_tb}')
  
 
     def upsert_sales_summary_catagory(self):
@@ -41,7 +40,7 @@ class Gold():
                                 .groupBy("category")
                                 .agg(F.sum("sales_amount").alias("total_sales"))
                             )
-        sales_summary_catagory.write.mode('overwrite').saveAsTable(f'{self.catalog}.{self.silver_db}.{self.sales_summary_catagory_tb}')
+        sales_summary_catagory.write.mode('overwrite').saveAsTable(f'{self.catalog}.{self.gold_db}.{self.sales_summary_catagory_tb}')
         
         
     def upsert(self):
