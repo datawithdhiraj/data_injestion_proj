@@ -21,12 +21,12 @@ class Bronze():
         date = datetime.date.today().strftime("%Y-%m-%d")
         dateFolder = datetime.date.today().strftime("%Y/%m/%d/")
         file_name =  file_ini + date + ".txt"
-        file_path = self.landing_zone + dateFolder  + file_name
+        file_path = self.landing_zone + dateFolder
         return (file_name,file_path)
 
     def consume_customers(self):
         (file_name,file_path) = self.get_file_Name_path(self.customers_file_ini)
-        file_exists = any(f.name == file_name for f in dbutils.fs.ls(self.landing_zone))
+        file_exists = any(f.name == file_name for f in dbutils.fs.ls(file_path))
         if file_exists:
             schema = '''customer_id long,
                         name string,
@@ -40,7 +40,7 @@ class Bronze():
                             .format("csv")
                             .option("header", "true")
                             .schema(schema)
-                            .load(file_path))
+                            .load(file_path + file_name))
 
             customers_df.write.mode("append").saveAsTable(f"{self.catalog}.{self.bronze_db}.customers")
         else:
@@ -49,7 +49,7 @@ class Bronze():
         
     def consume_products(self):
         (file_name,file_path) = self.get_file_Name_path(self.product_file_ini)
-        file_exists = any(f.name == file_name for f in dbutils.fs.ls(self.landing_zone))
+        file_exists = any(f.name == file_name for f in dbutils.fs.ls(file_path))
         if file_exists:
             schema = '''product_id long,
                         product_name string,
@@ -61,15 +61,15 @@ class Bronze():
                             .format("csv")
                             .option("header", "true")
                             .schema(schema)
-                            .load(file_path))
+                            .load(file_path + file_name))
 
             customers_df.write.mode("append").saveAsTable(f"{self.catalog}.{self.bronze_db}.products")
         else:
             print("No updates today for customers")
 
     def consume_sales(self):
-        (file_name,file_path) = self.get_file_Name_path(self.sales_file_ini )
-        file_exists = any(f.name == file_name for f in dbutils.fs.ls(self.landing_zone))
+        (file_name,file_path) = self.get_file_Name_path(self.sales_file_ini)
+        file_exists = any(f.name == file_name for f in dbutils.fs.ls(file_path))
         if file_exists:
             schema = '''transaction_id long,
                         customer_id long,
@@ -83,7 +83,7 @@ class Bronze():
                             .format("csv")
                             .option("header", "true")
                             .schema(schema)
-                            .load(file_path))
+                            .load(file_path + file_name))
 
             customers_df.write.mode("append").saveAsTable(f"{self.catalog}.{self.bronze_db}.sales")
         else:
