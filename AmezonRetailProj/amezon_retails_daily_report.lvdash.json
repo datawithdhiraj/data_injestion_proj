@@ -1,0 +1,184 @@
+{
+  "datasets": [
+    {
+      "name": "8a513e46",
+      "displayName": "Daily Sales Overview from Gold Database",
+      "queryLines": [
+        "Select * from dev.gold_db.sales_summmary_daily"
+      ]
+    },
+    {
+      "name": "16950214",
+      "displayName": "Category wise sales",
+      "queryLines": [
+        "select * from dev.gold_db.sales_summary_catagory"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "aae92772",
+      "displayName": "Daily Sales",
+      "layout": [
+        {
+          "widget": {
+            "name": "10229774",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8a513e46",
+                  "fields": [
+                    {
+                      "name": "daily(sale_date)",
+                      "expression": "DATE_TRUNC(\"DAY\", `sale_date`)"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(sale_date)",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 0,
+            "width": 11,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "21e0db6f",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "4aa43147",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "0bb0655a",
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {},
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "d5d4bf52",
+      "displayName": "Category wise sales",
+      "layout": [
+        {
+          "widget": {
+            "name": "203828de",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "16950214",
+                  "fields": [
+                    {
+                      "name": "category",
+                      "expression": "`category`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "category",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 3,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
