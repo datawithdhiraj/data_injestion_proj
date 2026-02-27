@@ -10,6 +10,7 @@ class Gold():
         self.sales_tb = "sales"
         self.products_tb = "products"
 
+
         
         
     def get_df(self,table_name,shall_take_all_data = False):
