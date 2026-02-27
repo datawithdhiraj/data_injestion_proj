@@ -49,7 +49,7 @@
                 "x": {
                   "fieldName": "daily(sale_date)",
                   "scale": {
-                    "type": "temporal"
+                    "type": "categorical"
                   }
                 },
                 "y": {
