@@ -12,14 +12,14 @@ class Gold():
 
         
         
-    def get_df(self,table_name):
-        return spark.read.table(f"{self.catalog}.{self.silver_db}.{table_name}").filter('last_updated = current_date()')
+    def get_df(self,table_name,shall_take_all_data = False):
+        return spark.read.table(f"{self.catalog}.{self.silver_db}.{table_name}").filter(f'last_updated = current_date() or {shall_take_all_data}')
 
 
     def upsert_sales_summmary_daily(self):
         from pyspark.sql import functions as F
 
-        products_df = self.get_df(self.products_tb)
+        products_df = self.get_df(self.products_tb, True)
         sales_df = self.get_df(self.sales_tb)
 
         sales_summmary_daily = ( sales_df.join(products_df, "product_id")
@@ -32,8 +32,8 @@ class Gold():
     def upsert_sales_summary_catagory(self):
         from pyspark.sql import functions as F
 
-        products_df = self.get_df(self.products_tb)
-        sales_df = self.get_df(self.sales_tb)
+        products_df = self.get_df(self.products_tb, True)
+        sales_df = self.get_df(self.sales_tb, True)
 
         sales_summary_catagory = (sales_df.join(products_df, "product_id")
                                 .withColumn("sales_amount", F.col("quantity") * F.col("price"))
