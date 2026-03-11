@@ -1,0 +1,6 @@
+selected resource name:		AmazonRetailsDataInjest
+selected resource type:		pipeline
+factory name:			adfformyself
+factory location:		eastus
+subscription id:		fd32faf7-f7ae-4b6c-bc1a-e6cffea1567a
+time of download (UTC):		Tue, 10 Mar 2026 03:07:48 GMT
